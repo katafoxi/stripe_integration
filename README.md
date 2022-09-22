@@ -22,6 +22,10 @@ login: root  | password: 123
 
 Создаем Item(товары), Order(Заказы) и идем по адресу [http://localhost:8080/](http://localhost:8080/)
 
+Формы для Items по адресу: [http://localhost:8080/item/id](http://localhost:8080/item/1)
+
+Формы для Order по адресу: [http://localhost:8080/order/id](http://localhost:8080/order/1)
+
 Опционально на товары можно вешать иконки/картинки.
 
 ![2022-09-22 11_19_57-Buy Item {contract id}](https://user-images.githubusercontent.com/83884504/191699396-b85cdb69-4c3b-406e-8685-bbd49f53f6c4.png)
