@@ -1,0 +1,21 @@
+{% extends "payment/base.html" %}
+{% load static %}
+{% block title %}
+  {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+{% block content %}
+  <h1>Товары</h1>
+  <div id="main" class="item-list">
+
+    {% for item in items %}
+      <div class="item">
+        <a href="{{ item.get_absolute_url }}">
+          <img class="itemimg" src="{% if item.icon %}{{ item.icon.url }}{% else %}{% static "payment/img/no_image.jpg" %}{% endif %}">
+        </a>
+        <p>${{ item.price }}</p>
+        <a class="itemdescr" href="{{ item.get_absolute_url }}" style="display: block">{{ item.description }}</a><br>
+
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>{% block title %}My shop{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'payment/css/base.css' %}">
+  {#  <link href="{% static "css/base.css" %}" rel="stylesheet">#}
+</head>
+<body>
+<div id="header">
+  <div>
+    <h1 style="display: inline">Магазинчик</h1>
+    <a href="/" class="logo">
+      <img src="https://cdn-icons-png.flaticon.com/512/79/79557.png">
+    </a>
+  </div>
+  <div></div>
+
+  <div>
+    Your cart is empty.
+  </div>
+</div>
+
+<div id="content">
+  {% block content %}
+  {% endblock %}
+</div>
+</body>
+</html>

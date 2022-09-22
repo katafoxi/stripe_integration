@@ -1,0 +1,54 @@
+{% load static %}
+
+<html>
+<head>
+  <title>Buy Item {contract.id}</title>
+  <link rel="stylesheet" href="{% static 'payment/css/style.css' %}">
+  <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<section>
+
+  <div class="product">
+    <!--Если item, показываем иконку товара -->
+    {% if contract.subtype == 'item' %}
+      <img class="itemimg"
+           src="{% if contract.icon %}{{ contract.icon }}{% else %}{% static "payment/img/no_image.jpg" %}{% endif %}">
+    {% endif %}
+    <div class="description">
+      <h3>{{ contract.name }}</h3>
+      <h4>{{ contract.description }}</h4>
+      <h5>${{ contract.price }}</h5>
+    </div>
+  </div>
+  <button id="buy-button">Buy</button>
+</section>
+<script type="text/javascript">
+    // GetbuyButton
+    let buyButton = document.getElementById('buy-button');
+    // Event handler
+    {% if contract.subtype == 'item' %}
+        let url = '/buy/{{ contract.id }}'
+    {% else %}
+        url = '/buy_order/{{ contract.id }}'
+    {% endif %}
+    buyButton.addEventListener("click", () => {
+        // Get Checkout Session ID
+        fetch(url, {method: 'GET'})
+            .then((result) => {
+                return result.json();
+            })
+            .then((data) => {
+                const stripe = Stripe(data.publicKey);
+                console.log(data);
+                // Redirect to Stripe Checkout
+                return stripe.redirectToCheckout({sessionId: data.sessionId})
+            })
+            .then((res) => {
+                console.log(res);
+            });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout canceled</title>
+  <link rel="stylesheet" href="{% static 'payment/css/style.css' %}">
+</head>
+<body>
+<section>
+  <p>
+    Зачем передумал дорогой? Посмотри другие
+    <a href="{% url 'product_list' %}"> _товары_!</a>
+  </p>
+</section>
+</body>
+</html>
