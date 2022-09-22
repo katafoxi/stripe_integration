@@ -1,0 +1,89 @@
+version: '3.8'
+
+#x-app_environment: &app_environment
+#  environment:
+#    - DEBUG=True
+
+
+services:
+  shop:
+    build:
+      context: shop/
+      dockerfile: dockerfile
+    image: shop
+    container_name: 'shop'
+    entrypoint: sh wait-for pgdb:5432 -- ./entrypoint.sh
+    command: python manage.py runserver 0.0.0.0:8080
+    environment:
+      # переменные для Postgres и PGAdmin
+      - POSTGRES_NAME=pgdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=pgdb
+      - DEBUG=True
+      - DJANGO_SECRET_KEY=django-insecure-vru5mlq99jo&=b^7y0y40eci&n-!nv&h2qr_a_g&-&5+9y7xh4
+      - DJANGO_SETTINGS_MODULE=conf.settings
+      # переменные для автоматического создания суперпользователя django
+      - DJANGO_SUPERUSER_PASSWORD=123
+      - DJANGO_SUPERUSER_EMAIL=root@mail.com
+      - DJANGO_SUPERUSER_USERNAME=root
+      # переменные для Stripe
+      - STRIPE_PUBLISHABLE_KEY=pk_test_51Lj7tiEztU9ZHbCWD6NGI3PDI49vBqeksMq29zREztEfYhtlnz4VUSYUG53mp2FQhUsFxX4FPw2Kc3Xq4Bab8SGV00zaWjQNJY
+      - STRIPE_SECRET_KEY=sk_test_51Lj7tiEztU9ZHbCW46evV6587UxlDS97ktkQLdfzjXnlZAcmIzOcnDzFMO81OiGuTXPGQNScO8O6qDRti4Feb9WS00XXh3Hbqp
+    volumes:
+      - ./shop/:/app/
+    depends_on:
+      - pgdb
+    ports:
+      - 8080:8080
+
+  pgdb:
+    container_name: pgdb
+    image: postgres:14.5
+
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: pgdb
+      PGDATA: "/var/lib/postgresql/data"
+
+    volumes:
+      #      - ./postgres:/docker-entrypoint-initdb.d
+      - ../postgres/postgres_data:/var/lib/postgresql/data
+      # - ./customPostgresql.conf:/etc/postgresql.conf # файл конфигурирования ДБ
+
+    ports:
+      - "54321:5432"
+
+    #    проверка живости БД
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d pgdb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+
+
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:6.13
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@mail.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    #        PGADMIN_CONFIG_SERVER_MODE: 'True'
+    volumes:
+      - ../postgres/pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    depends_on:
+      - pgdb
+
+
