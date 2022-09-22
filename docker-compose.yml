@@ -31,7 +31,7 @@ services:
       - STRIPE_PUBLISHABLE_KEY=pk_test_51Lj7tiEztU9ZHbCWD6NGI3PDI49vBqeksMq29zREztEfYhtlnz4VUSYUG53mp2FQhUsFxX4FPw2Kc3Xq4Bab8SGV00zaWjQNJY
       - STRIPE_SECRET_KEY=sk_test_51Lj7tiEztU9ZHbCW46evV6587UxlDS97ktkQLdfzjXnlZAcmIzOcnDzFMO81OiGuTXPGQNScO8O6qDRti4Feb9WS00XXh3Hbqp
     volumes:
-      - ./shop/:/app/
+      - .:/app/
     depends_on:
       - pgdb
     ports:
